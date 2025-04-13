@@ -121,7 +121,7 @@ class FixedTrimViewer extends StatefulWidget {
     this.maxVideoLength = const Duration(milliseconds: 0),
     this.showDuration = true,
     this.durationTextStyle = const TextStyle(color: Colors.white),
-    this.durationStyle = DurationStyle.FORMAT_HH_MM_SS,
+    this.durationStyle = DurationStyle.FORMAT_MM_SS,
     this.onChangeStart,
     this.onChangeEnd,
     this.onChangePlaybackState,
@@ -437,6 +437,9 @@ class _FixedTrimViewerState extends State<FixedTrimViewer>
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         Text(
+                          // HOW DURATION ON THIS FORMAT 00:00
+                          // 00:00:00
+
                           Duration(milliseconds: _videoStartPos.toInt())
                               .format(widget.durationStyle),
                           style: widget.durationTextStyle,

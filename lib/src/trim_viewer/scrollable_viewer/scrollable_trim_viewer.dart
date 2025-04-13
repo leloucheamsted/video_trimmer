@@ -127,7 +127,7 @@ class ScrollableTrimViewer extends StatefulWidget {
     this.viewerHeight = 50,
     this.showDuration = true,
     this.durationTextStyle = const TextStyle(color: Colors.white),
-    this.durationStyle = DurationStyle.FORMAT_HH_MM_SS,
+    this.durationStyle = DurationStyle.FORMAT_MM_SS,
     this.onChangeStart,
     this.onChangeEnd,
     this.onChangePlaybackState,

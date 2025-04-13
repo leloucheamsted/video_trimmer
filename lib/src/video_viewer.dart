@@ -1,3 +1,4 @@
+import 'package:better_player/better_player.dart'; // Remplace l'import de chewie
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -36,12 +37,12 @@ class VideoViewer extends StatefulWidget {
   /// area. By default it is set to `EdgeInsets.all(0.0)`.
   ///
   const VideoViewer({
-    Key? key,
+    super.key,
     required this.trimmer,
     this.borderColor = Colors.transparent,
     this.borderWidth = 0.0,
     this.padding = const EdgeInsets.all(0.0),
-  }) : super(key: key);
+  });
 
   @override
   State<VideoViewer> createState() => _VideoViewerState();
@@ -52,6 +53,7 @@ class _VideoViewerState extends State<VideoViewer> {
   /// has been emitted.
   VideoPlayerController? get videoPlayerController =>
       widget.trimmer.videoPlayerController;
+  BetterPlayerController? _betterPlayerController;
 
   @override
   void initState() {
@@ -59,6 +61,23 @@ class _VideoViewerState extends State<VideoViewer> {
       if (event == TrimmerEvent.initialized) {
         //The video has been initialized, now we can load stuff
         setState(() {});
+        final dataSource = BetterPlayerDataSource(
+          BetterPlayerDataSourceType.file,
+          widget.trimmer.currentVideoFile!.path,
+        );
+
+        _betterPlayerController = BetterPlayerController(
+          BetterPlayerConfiguration(
+            aspectRatio: 16 / 9,
+            autoDetectFullscreenDeviceOrientation: true,
+            autoPlay: true,
+            looping: true,
+            fit: BoxFit.cover,
+            controlsConfiguration: BetterPlayerControlsConfiguration(
+                showControls: false, enableFullscreen: true),
+          ),
+          betterPlayerDataSource: dataSource,
+        );
       }
     });
     super.initState();
@@ -82,8 +101,9 @@ class _VideoViewerState extends State<VideoViewer> {
                             color: widget.borderColor,
                           ),
                         ),
-                        child: VideoPlayer(controller),
-                      )
+                        child: VideoPlayer(controller)
+                        //   BetterPlayer(controller: _betterPlayerController!),
+                        )
                     : const Center(
                         child: CircularProgressIndicator(
                           backgroundColor: Colors.white,

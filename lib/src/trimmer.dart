@@ -4,6 +4,7 @@ import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:path/path.dart';
+import 'package:better_player/better_player.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -31,6 +32,7 @@ class Trimmer {
   VideoPlayerController? get videoPlayerController => _videoPlayerController;
 
   File? currentVideoFile;
+  BetterPlayerController? _betterPlayerController;
 
   /// Listen to this stream to catch the events
   Stream<TrimmerEvent> get eventStream => _controller.stream;
@@ -44,6 +46,24 @@ class Trimmer {
       _videoPlayerController = VideoPlayerController.file(currentVideoFile!);
       await _videoPlayerController!.initialize().then((_) {
         _controller.add(TrimmerEvent.initialized);
+        BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+          BetterPlayerDataSourceType.file,
+          currentVideoFile!.path,
+        );
+        _betterPlayerController = BetterPlayerController(
+          BetterPlayerConfiguration(
+            aspectRatio: 16 / 9,
+            autoPlay: true,
+            looping: true,
+            fit: BoxFit.cover,
+            autoDetectFullscreenDeviceOrientation: true,
+            controlsConfiguration: BetterPlayerControlsConfiguration(
+              showControls: false,
+              enableFullscreen: true,
+            ),
+          ),
+          betterPlayerDataSource: dataSource,
+        );
       });
     }
   }
